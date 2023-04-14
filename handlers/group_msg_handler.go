@@ -30,28 +30,24 @@ var Q = Queue{}
 
 type Queue struct {
 	data map[interface{}][]interface{}
-	size int
 }
 
 func (q *Queue) Push(key, val interface{}) {
 	if q.data == nil {
 		q.data = make(map[interface{}][]interface{})
 	}
-	if q.size >= 5 {
+	if len(q.data[key]) >= 5 {
 		q.data[key] = q.data[key][1:]
-		q.size--
 	}
 	q.data[key] = append(q.data[key], val)
-	q.size++
 }
 
 func (q *Queue) Pop(key interface{}) interface{} {
-	if q.size == 0 {
+	if len(q.data[key]) == 0 {
 		return nil
 	}
 	val := q.data[key][0]
 	q.data[key] = q.data[key][1:]
-	q.size--
 	return val
 }
 
@@ -124,7 +120,7 @@ func (g *GroupMessageHandler) ReplyText() error {
 		logger.Info("user message is null")
 		return nil
 	}
-	Q.Push(g, gpt.RequestMessage{
+	Q.Push(g.sender.ID(), gpt.RequestMessage{
 		Role:    "user",
 		Content: requestText,
 	})
@@ -140,9 +136,8 @@ func (g *GroupMessageHandler) ReplyText() error {
 		return err
 	}
 	if reply.Content != "" {
-		Q.Push(g, reply)
+		Q.Push(g.sender.ID(), reply)
 	}
-	Q.Push(g, reply)
 	// 4.设置上下文，并响应信息给用户
 	g.service.SetUserSessionContext(requestText, reply.Content)
 	_, err = g.msg.ReplyText(g.buildReplyText(reply.Content))

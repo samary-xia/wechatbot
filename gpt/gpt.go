@@ -139,9 +139,17 @@ type RequestMessage struct {
 //model:gpt-3.5-turbo
 func ChatCompletions(msg interface{}) (RequestMessage, error) {
 	cfg := config.LoadConfig()
+	var messages []RequestMessage
+	for _, m := range msg.([]interface{}) {
+		message, ok := m.(RequestMessage)
+		if !ok {
+			return RequestMessage{}, errors.New("failed to convert interface{} to RequestMessage")
+		}
+		messages = append(messages, message)
+	}
 	requestBody := ChaRequestBody{
 		Model:            cfg.Model,
-		Messages:         msg.([]RequestMessage),
+		Messages:         messages,
 		MaxTokens:        cfg.MaxTokens,
 		Temperature:      cfg.Temperature,
 		TopP:             1,
