@@ -120,12 +120,12 @@ func (g *GroupMessageHandler) ReplyText() error {
 		logger.Info("user message is null")
 		return nil
 	}
-	Q.Push(g.sender.ID(), gpt.RequestMessage{
+	Q.Push(g, gpt.RequestMessage{
 		Role:    "user",
 		Content: requestText,
 	})
 	// 3.请求GPT获取回复
-	reply, err = gpt.ChatCompletions(Q.data[g.sender.ID()])
+	reply, err = gpt.ChatCompletions(Q.data[g])
 	if err != nil {
 		// 2.1 将GPT请求失败信息输出给用户，省得整天来问又不知道日志在哪里。
 		errMsg := fmt.Sprintf("gpt request error: %v", err)
@@ -136,7 +136,7 @@ func (g *GroupMessageHandler) ReplyText() error {
 		return err
 	}
 	if reply.Content != "" {
-		Q.Push(g.sender.ID(), reply)
+		Q.Push(g, reply)
 	}
 	// 4.设置上下文，并响应信息给用户
 	g.service.SetUserSessionContext(requestText, reply.Content)
