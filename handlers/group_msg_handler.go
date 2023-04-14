@@ -125,7 +125,7 @@ func (g *GroupMessageHandler) ReplyText() error {
 		Content: requestText,
 	})
 	// 3.请求GPT获取回复
-	reply, err = gpt.ChatCompletions(Q.data[g])
+	reply, err = gpt.ChatCompletions(Q.data[g.sender.ID()])
 	if err != nil {
 		// 2.1 将GPT请求失败信息输出给用户，省得整天来问又不知道日志在哪里。
 		errMsg := fmt.Sprintf("gpt request error: %v", err)
