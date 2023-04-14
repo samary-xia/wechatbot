@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/qingconglaixueit/wechatbot/config"
 	"github.com/eatmoreapple/openwechat"
 	"github.com/patrickmn/go-cache"
+	"github.com/qingconglaixueit/wechatbot/config"
 	"time"
 )
 
@@ -12,6 +12,7 @@ type UserServiceInterface interface {
 	GetUserSessionContext() string
 	SetUserSessionContext(question, reply string)
 	ClearUserSessionContext()
+	GetUserID() string
 }
 
 var _ UserServiceInterface = (*UserService)(nil)
@@ -59,4 +60,8 @@ func (s *UserService) GetUserSessionContext() string {
 func (s *UserService) SetUserSessionContext(question, reply string) {
 	value := question + "\n" + reply
 	s.cache.Set(s.user.ID(), value, time.Second*config.LoadConfig().SessionTimeout)
+}
+
+func (s *UserService) GetUserID() string {
+	return s.user.ID()
 }
