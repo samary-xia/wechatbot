@@ -47,33 +47,8 @@
 > * 项目仅供娱乐，滥用可能有微信封禁的风险，请勿用于商业用途。
 > * 请注意收发敏感信息，本项目不做信息过滤。
 
-# 使用docker运行
 
-你可以使用docker快速运行本项目。
-
-`第一种：基于环境变量运行`
-
-```sh
-# 运行项目，环境变量参考下方配置说明
-$ docker run -itd --name wechatbot --restart=always \
- -e APIKEY=换成你的key \
- -e AUTO_PASS=false \
- -e SESSION_TIMEOUT=60s \
- -e MODEL=text-davinci-003 \
- -e MAX_TOKENS=512 \
- -e TEMPREATURE=0.9 \
- -e REPLY_PREFIX=我是来自机器人回复: \
- -e SESSION_CLEAR_TOKEN=下一个问题 \
- docker.mirrors.sjtug.sjtu.edu.cn/qingshui869413421/wechatbot:latest
-
-# 查看二维码
-$ docker exec -it wechatbot bash 
-$ tail -f -n 50 /app/run.log 
-```
-
-运行命令中映射的配置文件参考下边的配置文件说明。
-
-`第二种：基于配置文件挂载运行`
+`基于配置文件挂载运行`
 
 ```sh
 # 复制配置文件，根据自己实际情况，调整配置里的内容
@@ -149,7 +124,7 @@ api_key：openai api_key
 auto_pass:是否自动通过好友添加
 session_timeout：会话超时时间，默认60秒，单位秒，在会话时间内所有发送给机器人的信息会作为上下文。
 max_tokens: GPT响应字符数，最大2048，默认值512。max_tokens会影响接口响应速度，字符越大响应越慢。
-model: GPT选用模型，默认text-davinci-003，具体选项参考官网训练场
+model: GPT选用模型，默认gpt-3.5-turbo，具体选项参考官网训练场
 temperature: GPT热度，0到1，默认0.9。数字越大创造力越强，但更偏离训练事实，越低越接近训练事实
 reply_prefix: 私聊回复前缀
 session_clear_token: 会话清空口令，默认`下一个问题`
