@@ -48,49 +48,7 @@
 > * 请注意收发敏感信息，本项目不做信息过滤。
 
 
-`基于配置文件挂载运行`
-
-```sh
-# 复制配置文件，根据自己实际情况，调整配置里的内容
-$ cp config.dev.json config.json  # 其中 config.dev.json 从项目的根目录获取
-
-# 运行项目
-$ docker run -itd --name wechatbot -v `pwd`/config.json:/app/config.json docker.mirrors.sjtug.sjtu.edu.cn/qingshui869413421/wechatbot:latest
-
-# 查看二维码
-$ docker exec -it wechatbot bash 
-$ tail -f -n 50 /app/run.log 
-```
-
-其中配置文件参考下边的配置文件说明。
-
 # 快速开始
-
-`第一种：直接下载二进制(适合对编程不了解的同学)`
-
-> 非技术人员请直接下载release中的[压缩包](https://github.com/869413421/wechatbot/releases) ，请根据自己系统以及架构选择合适的压缩包，下载之后直接解压运行。
-
-下载之后，在本地解压，即可看到可执行程序，与配置文件：
-
-```
-# windows
-1.下载压缩包解压
-2.复制文件中config.dev.json更改为config.json
-3.将config.json中的api_key替换为自己的
-4.双击exe，扫码登录
-
-# linux
-$ tar xf wechatbot-v0.0.2-darwin-arm64.tar.gz
-$ cd wechatbot-v0.0.2-darwin-arm64
-$ cp config.dev.json # 根据情况调整配置文件内容
-$ ./wechatbot  # 直接运行
-
-# 如果要守护在后台运行
-$ nohup ./wechatbot &> run.log &
-$ tail -f run.log
-```
-
-`第二种：基于源码运行(适合了解go语言编程的同学)`
 
 ````
 # 获取项目
@@ -114,7 +72,7 @@ $ go run main.go
   "auto_pass": true,
   "session_timeout": 60,
   "max_tokens": 1024,
-  "model": "text-davinci-003",
+  "model": "gpt-3.5-turbo",
   "temperature": 1,
   "reply_prefix": "来自机器人回复：",
   "session_clear_token": "清空会话"
